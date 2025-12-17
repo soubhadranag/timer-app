@@ -1,0 +1,32 @@
+name: Build Timer EXE
+
+on: workflow_dispatch  # Allows you to click a button to start
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Libraries
+        run: |
+          pip install pyinstaller
+          
+      - name: Build EXE
+        # --onefile: Make it a single file
+        # --noconsole: Hide the black box
+        # --name: Name your file
+        run: pyinstaller --onefile --noconsole --name "MyTimer" timer.py
+        
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: Download-Timer-App
+          path: dist/MyTimer.exe
